@@ -11,6 +11,7 @@
     },
     "android": {
       "adaptiveIcon": {
+        "package": "com.dama.saduvibe",
         "backgroundColor": "#E6F4FE",
         "foregroundImage": "./assets/android-icon-foreground.png",
         "backgroundImage": "./assets/android-icon-background.png",
