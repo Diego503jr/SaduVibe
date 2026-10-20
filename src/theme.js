@@ -1,16 +1,19 @@
+// src/theme.js
+// Paleta tomada del logo SADU VIBES
 export const colors = {
-  background: "#F4F6FB",
+  background: "#FFFBF2",   // crema cálido, como la luz del amanecer
   surface: "#FFFFFF",
-  primary: "#4F46E5",
-  primaryDark: "#3730A3",
-  accent: "#06B6D4",
-  text: "#0F172A",
-  textMuted: "#64748B",
-  textLight: "#94A3B8",
-  border: "#E2E8F0",
+  primary: "#5E6DB3",      // azul índigo del logo
+  primaryDark: "#4A58A0",
+  accent: "#F5C84B",       // amarillo del sol
+  text: "#252C5C",         // azul muy oscuro para texto
+  textMuted: "#6B7194",
+  textLight: "#A3A8C7",
+  border: "#E7E4DA",
   bubbleOther: "#FFFFFF",
-  bubbleMine: "#4F46E5",
-  danger: "#E11D48",
+  bubbleMine: "#5E6DB3",
+  danger: "#E0533D",       // naranja-rojo cálido
+  dangerSoft: "#FDE4DE",
   white: "#FFFFFF",
 };
 
@@ -22,9 +25,9 @@ export const radius = {
 };
 
 export const shadow = {
-  shadowColor: "#0F172A",
+  shadowColor: "#252C5C",
   shadowOffset: { width: 0, height: 6 },
-  shadowOpacity: 0.08,
+  shadowOpacity: 0.1,
   shadowRadius: 14,
   elevation: 4,
 };

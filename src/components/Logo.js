@@ -1,63 +1,35 @@
 import React from "react";
-import { View, Text, StyleSheet } from "react-native";
-import { MaterialCommunityIcons } from "@expo/vector-icons";
-import { colors, shadow } from "../theme";
+import { View, Image, StyleSheet } from "react-native";
+import { colors, radius, shadow } from "../theme";
 
-export default function Logo({ size = 84 }) {
-  const iconSize = Math.round(size * 0.5);
+const logo = require("../../assets/Logo.png");
 
+export default function Logo({ size = 170 }) {
   return (
-    <View style={styles.wrapper}>
-      <View
-        style={[
-          styles.mark,
-          { width: size, height: size, borderRadius: size * 0.32 },
-          shadow,
-        ]}
-      >
-        <MaterialCommunityIcons
-          name="chat-processing"
-          size={iconSize}
-          color={colors.white}
-        />
-        <View style={styles.dot} />
-      </View>
-
-      <Text style={styles.word}>
-        Sadu<Text style={styles.wordAccent}>Vibe</Text>
-      </Text>
+    <View
+      style={[
+        styles.card,
+        { width: size * 1.4, height: size },
+        shadow,
+      ]}
+    >
+      <Image source={logo} style={styles.image} resizeMode="contain" />
     </View>
   );
 }
 
 const styles = StyleSheet.create({
-  wrapper: {
-    alignItems: "center",
-  },
-  mark: {
-    backgroundColor: colors.primary,
+  card: {
+    backgroundColor: colors.surface,
+    borderRadius: radius.xl,
+    borderWidth: 1,
+    borderColor: colors.border,
     alignItems: "center",
     justifyContent: "center",
+    padding: 14,
   },
-  dot: {
-    position: "absolute",
-    top: 14,
-    right: 14,
-    width: 12,
-    height: 12,
-    borderRadius: 6,
-    backgroundColor: colors.accent,
-    borderWidth: 2,
-    borderColor: colors.white,
-  },
-  word: {
-    fontSize: 26,
-    fontWeight: "800",
-    color: colors.text,
-    letterSpacing: -0.5,
-    marginTop: 14,
-  },
-  wordAccent: {
-    color: colors.primary,
+  image: {
+    width: "100%",
+    height: "100%",
   },
 });

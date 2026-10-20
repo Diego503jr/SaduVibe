@@ -48,7 +48,7 @@ export default function LoginScreen({ navigation }) {
         showsVerticalScrollIndicator={false}
       >
         <View style={styles.header}>
-          <Logo size={84} />
+          <Logo size={170} />
           <Text style={styles.title}>¡Bienvenido!</Text>
           <Text style={styles.subtitle}>Inicia sesión para chatear</Text>
         </View>
