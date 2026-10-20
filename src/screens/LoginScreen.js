@@ -1,5 +1,5 @@
 // src/screens/LoginScreen.js
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import {
   View,
   Text,
@@ -10,40 +10,63 @@ import {
   Platform,
   Alert,
   ScrollView,
+  Keyboard,
 } from "react-native";
 import { StatusBar } from "expo-status-bar";
 import { MaterialCommunityIcons } from "@expo/vector-icons";
 import Logo from "../components/Logo";
 import { colors, radius, shadow } from "../theme";
+import { saveSession } from "../services/session";
 
 export default function LoginScreen({ navigation }) {
   const [username, setUsername] = useState("");
   const [password, setPassword] = useState("");
   const [showPassword, setShowPassword] = useState(false);
+  const [keyboardVisible, setKeyboardVisible] = useState(false);
 
-  const handleLogin = () => {
+  const handleLogin = async () => {
     const name = username.trim();
 
     if (!name || !password.trim()) {
       Alert.alert(
         "Campos obligatorios",
-        "Ingresa tu nombre de usuario y contraseña."
+        "Ingresa tu nombre de usuario y contraseña.",
       );
       return;
     }
 
+    await saveSession(name);
     navigation.replace("Chat", { username: name });
   };
 
+  useEffect(() => {
+    const showEvent =
+      Platform.OS === "ios" ? "keyboardWillShow" : "keyboardDidShow";
+    const hideEvent =
+      Platform.OS === "ios" ? "keyboardWillHide" : "keyboardDidHide";
+
+    const showSub = Keyboard.addListener(showEvent, () =>
+      setKeyboardVisible(true),
+    );
+    const hideSub = Keyboard.addListener(hideEvent, () =>
+      setKeyboardVisible(false),
+    );
+
+    return () => {
+      showSub.remove();
+      hideSub.remove();
+    };
+  }, []);
+
   return (
-    <KeyboardAvoidingView
-      style={styles.container}
-      behavior={Platform.OS === "ios" ? "padding" : undefined}
-    >
+    <KeyboardAvoidingView style={styles.container} behavior="padding">
       <StatusBar style="dark" />
 
       <ScrollView
-        contentContainerStyle={styles.scrollContent}
+        contentContainerStyle={[
+          styles.scrollContent,
+          keyboardVisible && styles.scrollContentKeboard,
+        ]}
         keyboardShouldPersistTaps="handled"
         showsVerticalScrollIndicator={false}
       >
@@ -134,6 +157,10 @@ const styles = StyleSheet.create({
     justifyContent: "center",
     paddingHorizontal: 24,
     paddingVertical: 40,
+  },
+  scrollContentKeboard: {
+    justifyContent: "flex-start",
+    paddingVertical: 20,
   },
   header: {
     alignItems: "center",

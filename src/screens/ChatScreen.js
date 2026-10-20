@@ -9,6 +9,7 @@ import {
   KeyboardAvoidingView,
   Platform,
   Alert,
+  Keyboard,
 } from "react-native";
 import { MaterialCommunityIcons } from "@expo/vector-icons";
 import { listenMessages, sendMessage } from "../services/chatService";
@@ -20,6 +21,26 @@ export default function ChatScreen({ route }) {
   const [messages, setMessages] = useState([]);
   const [text, setText] = useState("");
   const listRef = useRef(null);
+  const [keyboardVisible, setKeyboardVisible] = useState(false);
+
+  useEffect(() => {
+    const showEvent =
+      Platform.OS === "ios" ? "keyboardWillShow" : "keyboardDidShow";
+    const hideEvent =
+      Platform.OS === "ios" ? "keyboardWillHide" : "keyboardDidHide";
+
+    const showSub = Keyboard.addListener(showEvent, () =>
+      setKeyboardVisible(true),
+    );
+    const hideSub = Keyboard.addListener(hideEvent, () =>
+      setKeyboardVisible(false),
+    );
+
+    return () => {
+      showSub.remove();
+      hideSub.remove();
+    };
+  }, []);
 
   useEffect(() => {
     const unsubscribe = listenMessages(setMessages);
@@ -45,7 +66,7 @@ export default function ChatScreen({ route }) {
   return (
     <KeyboardAvoidingView
       style={styles.container}
-      behavior={Platform.OS === "ios" ? "padding" : undefined}
+      behavior="padding"
       keyboardVerticalOffset={90}
     >
       <FlatList
@@ -60,7 +81,10 @@ export default function ChatScreen({ route }) {
             isMine={item.user === username}
           />
         )}
-        contentContainerStyle={styles.listContent}
+        contentContainerStyle={[
+          styles.listContent,
+          keyboardVisible && styles.scrollContentKeboard,
+        ]}
         onContentSizeChange={() =>
           listRef.current?.scrollToEnd({ animated: true })
         }
@@ -108,6 +132,10 @@ const styles = StyleSheet.create({
   listContent: {
     paddingVertical: 16,
     flexGrow: 1,
+  },
+  scrollContentKeboard: {
+    justifyContent: "flex-start",
+    paddingVertical: 20,
   },
   empty: {
     flex: 1,
