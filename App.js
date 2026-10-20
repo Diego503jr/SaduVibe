@@ -1,12 +1,33 @@
 import React from "react";
-import { Text, TouchableOpacity } from "react-native";
+import { Alert, Text, TouchableOpacity } from "react-native";
 import { NavigationContainer } from "@react-navigation/native";
 import { createNativeStackNavigator } from "@react-navigation/native-stack";
+import { MaterialCommunityIcons } from "@expo/vector-icons";
 
 import LoginScreen from "./src/screens/LoginScreen";
 import ChatScreen from "./src/screens/ChatScreen";
+import { colors } from "./src/theme";
 
 const Stack = createNativeStackNavigator();
+
+function confirmLogout(navigation) {
+  Alert.alert(
+    "Cerrar sesión",
+    "¿Seguro que quieres salir del chat?",
+    [
+      { text: "Cancelar", style: "cancel" },
+      {
+        text: "Salir",
+        style: "destructive",
+        onPress: () =>
+          navigation.reset({
+            index: 0,
+            routes: [{ name: "Login" }],
+          }),
+      },
+    ]
+  );
+}
 
 export default function App() {
   return (
@@ -16,15 +37,41 @@ export default function App() {
         screenOptions={{ headerShown: false }}
       >
         <Stack.Screen name="Login" component={LoginScreen} />
+
         <Stack.Screen
           name="Chat"
           component={ChatScreen}
           options={({ route, navigation }) => ({
-            title: `Chat · ${route.params.username}`,
+            headerShown: true,
+            title: route.params?.username ?? "Chat",
+            headerTitleStyle: {
+              color: colors.text,
+              fontWeight: "700",
+              fontSize: 17,
+            },
+            headerStyle: { backgroundColor: colors.surface },
+            headerShadowVisible: false,
             headerBackVisible: false,
+            gestureEnabled: false,
             headerRight: () => (
-              <TouchableOpacity onPress={() => navigation.replace("Login")}>
-                <Text style={{ color: "#d9534f", fontWeight: "600" }}>
+              <TouchableOpacity
+                onPress={() => confirmLogout(navigation)}
+                style={{
+                  flexDirection: "row",
+                  alignItems: "center",
+                  gap: 4,
+                  backgroundColor: "#FEE2E2",
+                  paddingHorizontal: 12,
+                  paddingVertical: 6,
+                  borderRadius: 999,
+                }}
+              >
+                <MaterialCommunityIcons
+                  name="logout"
+                  size={16}
+                  color={colors.danger}
+                />
+                <Text style={{ color: colors.danger, fontWeight: "600" }}>
                   Salir
                 </Text>
               </TouchableOpacity>

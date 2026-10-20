@@ -1,3 +1,4 @@
+// src/screens/LoginScreen.js
 import React, { useState } from "react";
 import {
   View,
@@ -8,11 +9,12 @@ import {
   KeyboardAvoidingView,
   Platform,
   Alert,
-  Image,
   ScrollView,
-  StatusBar,
 } from "react-native";
+import { StatusBar } from "expo-status-bar";
 import { MaterialCommunityIcons } from "@expo/vector-icons";
+import Logo from "../components/Logo";
+import { colors, radius, shadow } from "../theme";
 
 export default function LoginScreen({ navigation }) {
   const [username, setUsername] = useState("");
@@ -25,7 +27,7 @@ export default function LoginScreen({ navigation }) {
     if (!name || !password.trim()) {
       Alert.alert(
         "Campos obligatorios",
-        "Ingresa tu nombre de usuario y contraseña.",
+        "Ingresa tu nombre de usuario y contraseña."
       );
       return;
     }
@@ -38,7 +40,7 @@ export default function LoginScreen({ navigation }) {
       style={styles.container}
       behavior={Platform.OS === "ios" ? "padding" : undefined}
     >
-      <StatusBar barStyle="dark-content" backgroundColor="#F1F5FB" />
+      <StatusBar style="dark" />
 
       <ScrollView
         contentContainerStyle={styles.scrollContent}
@@ -46,27 +48,23 @@ export default function LoginScreen({ navigation }) {
         showsVerticalScrollIndicator={false}
       >
         <View style={styles.header}>
-          <View style={styles.logoContainer}>
-            <Image
-              source={require("../../assets/Logo.jpeg")}
-              style={styles.logo}
-              resizeMode="contain"
-            />
-          </View>
-
+          <Logo size={84} />
           <Text style={styles.title}>¡Bienvenido!</Text>
           <Text style={styles.subtitle}>Inicia sesión para chatear</Text>
         </View>
 
-        <View style={styles.card}>
+        <View style={[styles.card, shadow]}>
           <Text style={styles.label}>Nombre de usuario</Text>
-
           <View style={styles.inputContainer}>
-            <MaterialCommunityIcons name="account" size={22} color="#64748B" />
+            <MaterialCommunityIcons
+              name="account-outline"
+              size={20}
+              color={colors.textMuted}
+            />
             <TextInput
               style={styles.input}
               placeholder="Ingresa tu usuario"
-              placeholderTextColor="#94A3B8"
+              placeholderTextColor={colors.textLight}
               value={username}
               onChangeText={setUsername}
               autoCapitalize="none"
@@ -76,13 +74,16 @@ export default function LoginScreen({ navigation }) {
           </View>
 
           <Text style={styles.label}>Contraseña</Text>
-
           <View style={styles.inputContainer}>
-            <MaterialCommunityIcons name="lock" size={22} color="#64748B" />
+            <MaterialCommunityIcons
+              name="lock-outline"
+              size={20}
+              color={colors.textMuted}
+            />
             <TextInput
               style={styles.input}
               placeholder="Ingresa tu contraseña"
-              placeholderTextColor="#94A3B8"
+              placeholderTextColor={colors.textLight}
               value={password}
               onChangeText={setPassword}
               secureTextEntry={!showPassword}
@@ -91,27 +92,33 @@ export default function LoginScreen({ navigation }) {
               returnKeyType="done"
               onSubmitEditing={handleLogin}
             />
-
-            <TouchableOpacity onPress={() => setShowPassword(!showPassword)}>
+            <TouchableOpacity
+              onPress={() => setShowPassword(!showPassword)}
+              hitSlop={10}
+            >
               <MaterialCommunityIcons
                 name={showPassword ? "eye-outline" : "eye-off-outline"}
-                size={22}
-                color="#64748B"
+                size={20}
+                color={colors.textMuted}
               />
             </TouchableOpacity>
           </View>
 
           <TouchableOpacity
-            style={styles.button}
+            style={[styles.button, shadow]}
             onPress={handleLogin}
-            activeOpacity={0.8}
+            activeOpacity={0.85}
           >
             <Text style={styles.buttonText}>Entrar</Text>
-            <Text style={styles.buttonArrow}>→</Text>
+            <MaterialCommunityIcons
+              name="arrow-right"
+              size={20}
+              color={colors.white}
+            />
           </TouchableOpacity>
-
-          <Text style={styles.footerText}>Tu espacio para conversar</Text>
         </View>
+
+        <Text style={styles.footerText}>Tu espacio para conversar</Text>
       </ScrollView>
     </KeyboardAvoidingView>
   );
@@ -120,137 +127,80 @@ export default function LoginScreen({ navigation }) {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    backgroundColor: "#F1F5FB",
+    backgroundColor: colors.background,
   },
-
   scrollContent: {
     flexGrow: 1,
     justifyContent: "center",
     paddingHorizontal: 24,
-    paddingVertical: 32,
+    paddingVertical: 40,
   },
-
   header: {
     alignItems: "center",
     marginBottom: 28,
   },
-
-  logoContainer: {
-    width: 200,
-    height: 100,
-    backgroundColor: "#FFFFFF",
-    borderRadius: 28,
-    padding: 10,
-    marginBottom: 22,
-    alignItems: "center",
-    justifyContent: "center",
-    elevation: 4,
-    shadowColor: "#1E3A5F",
-    shadowOffset: { width: 0, height: 4 },
-    shadowOpacity: 0.1,
-    shadowRadius: 10,
-  },
-
-  logo: {
-    width: "100%",
-    height: "100%",
-    borderRadius: 18,
-  },
-
   title: {
-    fontSize: 30,
-    fontWeight: "800",
-    color: "#172B4D",
-    textAlign: "center",
-    letterSpacing: -0.5,
+    fontSize: 24,
+    fontWeight: "700",
+    color: colors.text,
+    marginTop: 22,
   },
-
   subtitle: {
     fontSize: 15,
-    color: "#64748B",
-    marginTop: 8,
-    textAlign: "center",
+    color: colors.textMuted,
+    marginTop: 6,
   },
-
   card: {
     width: "100%",
     maxWidth: 440,
     alignSelf: "center",
-    backgroundColor: "#FFFFFF",
-    borderRadius: 24,
+    backgroundColor: colors.surface,
+    borderRadius: radius.xl,
     padding: 24,
-    borderWidth: 1,
-    borderColor: "#E7EDF5",
-    elevation: 5,
-    shadowColor: "#1E3A5F",
-    shadowOffset: { width: 0, height: 5 },
-    shadowOpacity: 0.07,
-    shadowRadius: 15,
   },
-
   label: {
-    fontSize: 14,
+    fontSize: 13,
     fontWeight: "700",
-    color: "#334155",
-    marginBottom: 9,
+    color: colors.text,
+    marginBottom: 8,
   },
-
   inputContainer: {
     flexDirection: "row",
     alignItems: "center",
+    gap: 10,
     borderWidth: 1,
-    borderColor: "#DCE3ED",
-    borderRadius: 13,
-    backgroundColor: "#F8FAFD",
+    borderColor: colors.border,
+    borderRadius: radius.md,
+    backgroundColor: colors.background,
     paddingHorizontal: 14,
-    marginBottom: 22,
-    minHeight: 54,
+    minHeight: 52,
+    marginBottom: 20,
   },
-
-  inputIcon: {
-    fontSize: 18,
-    marginRight: 10,
-  },
-
   input: {
     flex: 1,
     fontSize: 15,
-    color: "#172B4D",
+    color: colors.text,
     paddingVertical: 12,
   },
-
   button: {
     flexDirection: "row",
     alignItems: "center",
     justifyContent: "center",
-    backgroundColor: "#2563EB",
+    gap: 8,
+    backgroundColor: colors.primary,
     minHeight: 54,
-    borderRadius: 13,
+    borderRadius: radius.md,
     marginTop: 4,
-    elevation: 3,
-    shadowColor: "#2563EB",
-    shadowOffset: { width: 0, height: 4 },
-    shadowOpacity: 0.22,
-    shadowRadius: 7,
   },
-
   buttonText: {
-    color: "#FFFFFF",
+    color: colors.white,
     fontSize: 16,
     fontWeight: "700",
   },
-
-  buttonArrow: {
-    color: "#FFFFFF",
-    fontSize: 20,
-    fontWeight: "600",
-    marginLeft: 10,
-  },
-
   footerText: {
     textAlign: "center",
-    color: "#94A3B8",
+    color: colors.textLight,
     fontSize: 12,
-    marginTop: 22,
+    marginTop: 24,
   },
 });
